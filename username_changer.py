@@ -10,7 +10,7 @@ ini_settings = {"SmartSteamEmu":"PersonaName ","Settings":"UserName","Settings":
 
 def find_files(directory):
     files = []
-    pathlist = Path(directory).glob('**/*.ini')
+    pathlist = Path(directory).resolve().glob('**/*.ini')
     for path in pathlist:
         if (extract_basename(path)) in allowed_names:
             files.append(path)
@@ -24,9 +24,10 @@ def extract_basename(path):
 def backup_and_change(file_paths,username):
     for win_path in file_paths:
         path = str(win_path)
-        if not(Path(path.join(".bak")).exists()):
-            print("backing up file to %s"%(path.join(".bak")))
-            copyfile(path,path.join(".bak"))
+        bak_path = Path(path+".bak")
+        if not(bak_path.exists()):
+            print("backing up file to %s"%(bak_path))
+            copyfile(path,bak_path)
         change_username(path,username)
 
 def change_username(path,username):
