@@ -4,7 +4,7 @@ from shutil import copyfile
 from configparser import ConfigParser
 
 allowed_names = ["SmartSteamEmu.ini","steam_emu.ini","ALI213.ini","Origins.ini","steam_api.ini","stp-steam.ini","rev.ini","CPY.ini"]
-ini_settings = {"SmartSteamEmu":"PersonaName ","Settings":"UserName","Settings":"PlayerName","UserName":"Name","Globals":"PersonaName","steamclient":"PlayerName"}
+ini_settings = {"SmartSteamEmu":"PersonaName ","Settings":"UserName","Settings":"PlayerName","UserName":"Name","Globals":"PersonaName","steamclient":"PlayerName","Emulator":"SteamUser","Settings":"username"}
 
 def find_files(directory):
     files = []
@@ -24,7 +24,12 @@ def backup_files(file_paths):
         path = str(win_path)
         copyfile(path,path+".bak")
 
-def rename_fields(path):
+def rename_username(path,username):
     config = ConfigParser()
     config.read(path)
-    return config
+    for key,item in ini_settings.items():
+        if key in config:
+            if item in config[key]:
+                config[key][item] = username
+    with open(path, 'w') as configfile:
+        config.write(configfile)
