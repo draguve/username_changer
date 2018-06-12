@@ -19,17 +19,21 @@ def extract_basename(path):
     if basename:
         return basename.group(0)
 
-def backup_files(file_paths):
+def backup_and_change(file_paths,username):
     for win_path in file_paths:
         path = str(win_path)
-        copyfile(path,path+".bak")
+        if not(Path(path.join(".bak")).exists()):
+            print("backing up file to %s"%(path.join(".bak")))
+            copyfile(path,path.join(".bak"))
+        change_username(path,username)
 
-def rename_username(path,username):
+def change_username(path,username):
     config = ConfigParser()
     config.read(path)
     for key,item in ini_settings.items():
         if key in config:
             if item in config[key]:
+                print("changing %s to %s in %s"%(config[key][item],username,path))
                 config[key][item] = username
     with open(path, 'w') as configfile:
         config.write(configfile)
