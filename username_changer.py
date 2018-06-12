@@ -2,6 +2,8 @@ from pathlib import Path
 import re
 from shutil import copyfile
 from configparser import ConfigParser
+import sys
+import os
 
 allowed_names = ["SmartSteamEmu.ini","steam_emu.ini","ALI213.ini","Origins.ini","steam_api.ini","stp-steam.ini","rev.ini","CPY.ini"]
 ini_settings = {"SmartSteamEmu":"PersonaName ","Settings":"UserName","Settings":"PlayerName","UserName":"Name","Globals":"PersonaName","steamclient":"PlayerName","Emulator":"SteamUser","Settings":"username"}
@@ -37,3 +39,12 @@ def change_username(path,username):
                 config[key][item] = username
     with open(path, 'w') as configfile:
         config.write(configfile)
+
+if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        path = os.path.dirname(sys.argv[0])
+        username = sys.argv[1]
+    else:
+        path = os.path.dirname(sys.argv[0])
+        username = input("Username ->")
+    backup_and_change(find_files(path),username)
